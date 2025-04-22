@@ -3,7 +3,7 @@
 #include <vector>
 #include <thread>  // for sleep_for
 #include <chrono>  // for milliseconds
-#include <conio.h> // fopr _kbhit() and _getch() on Windows
+#include <conio.h> // for _kbhit() and _getch() on Windows
 
 const int ROWS = 8;
 const int COLS = 12;
@@ -88,7 +88,7 @@ int main() {
                 break;
             }
         }
-
+        system("cls");
         shiftMatrixLeft();
         std::cout << "\nAfter shift:\n";
         printMatrix(bits);
