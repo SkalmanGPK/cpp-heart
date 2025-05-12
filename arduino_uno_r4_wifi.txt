@@ -1,0 +1,50 @@
+# This is the same logic as the cpp file, but implemented to work on the Ardunio
+# Matrix, there are options of keeping the const as a 32bit int with hexadecimals
+# Altough that prooved to be unexpectadly difficult
+#include <Arduino_LED_Matrix.h>
+
+ArduinoLEDMatrix matrix;
+
+
+const uint8_t heart[8][12] = {
+  { 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0 },
+  { 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0 },
+  { 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0 },
+  { 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
+  { 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0 },
+  { 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0 },
+  { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+};
+
+void shiftMatrixLeft(const uint8_t src[8][12], uint8_t dest[8][12], int offsets[8]) {
+  for (int y = 0; y < 8; y++) {
+    for (int x = 0; x < 12; x++) {
+      int shiftedX = (x + offsets[y]) % 12;
+      dest[y][x] = src[y][shiftedX];
+    }
+  }
+}
+
+void setup() {
+  matrix.begin();
+}
+
+void loop() {
+  static int offsets[8] = {0};
+  uint8_t shifted[8][12];
+
+  // Uppdatera offset för varje rad
+  for (int y = 0; y < 8; y++) {
+    offsets[y] = (offsets[y] + 1) % 12;
+  }
+
+  // Skifta matrisen
+  shiftMatrixLeft(heart, shifted, offsets);
+
+  // Visa den skiftade matrisen
+  matrix.renderBitmap(shifted, 8, 12);
+
+  delay(300);
+}
+
